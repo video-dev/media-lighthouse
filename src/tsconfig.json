@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "../app",
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "ESNext",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "moduleResolution": "node",
+    "baseUrl": "../",
+    "paths": {
+      "src/*": ["src/*"]
+    }
+  }
+}
