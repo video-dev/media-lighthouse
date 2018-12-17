@@ -1,5 +1,5 @@
 # media-lighthouse
-🗼See problems with media before debugging
+🗼See problems before debugging
 
 
 ### Problems
