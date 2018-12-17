@@ -1,2 +1,2 @@
 # media-lighthouse
-🗼See problems with media before you debug them
+🗼See problems with media before debugging
