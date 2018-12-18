@@ -5,6 +5,9 @@
   "rules": {
     "quotemark": {
       "options": ["single", "avoid-escape"]
-    }
+    },
+    "no-bitwise": false,
+    "variable-name": [true, "allow-leading-underscore"],
+    "no-console": false
   }
 }

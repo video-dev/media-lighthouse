@@ -8,12 +8,14 @@
   "private": false,
   "scripts": {
     "build": "tsc -p ./src",
-    "lint": "tslint 'src/**/*.ts'"
+    "lint": "tslint 'src/**/*.ts'",
+    "watch": "tsc -w -p ./src"
   },
   "dependencies": {
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
-    "thumbcoil": "^1.2.3-hackweek2"
+    "thumbcoil": "^1.2.3-hackweek2",
+    "url-toolkit": "^2.1.6"
   },
   "devDependencies": {
     "@types/request-promise-native": "^1.0.15",
