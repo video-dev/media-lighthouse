@@ -13,7 +13,7 @@ export default class Fragment {
   public duration: number;
   public levelkey: string;
   public sn: number = 0;
-  public data: Uint8Array;
+  public data: any;
 
   private _url: string;
   private _byteRange: number[];
