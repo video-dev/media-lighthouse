@@ -10,13 +10,14 @@
     "build": "tsc -p ./src",
     "lint": "tslint 'src/**/*.ts'",
     "watch": "tsc -w -p ./src",
-    "serve": "nodemon --watch ./app/index.js"
+    "serve": "node --max-old-space-size=4096 ./app/index.js"
   },
   "dependencies": {
     "chart.js": "^2.7.3",
     "express": "^4.16.4",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
+    "rsmq": "^0.9.3",
     "thumbcoil": "^1.2.3-hackweek2",
     "url-toolkit": "^2.1.6"
   },
@@ -24,6 +25,7 @@
     "@types/chart.js": "^2.7.41",
     "@types/express": "^4.16.0",
     "@types/request-promise-native": "^1.0.15",
+    "@types/rsmq": "^0.3.27",
     "nodemon": "^1.18.9",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",

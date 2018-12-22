@@ -8,12 +8,13 @@ function isLevelPlaylist(playlist: string) {
 }
 
 const batchDownload = async (frags: Fragment[]) => {
-    const maxBatchSize = 10;
+    const maxBatchSize = 50;
     let i = 0;
     while (i < frags.length) {
         const batchSize = Math.min(maxBatchSize, frags.length - i);
         await Promise.all(frags.slice(i, i + batchSize).map(async (frag) => {
-            frag.data = await get({ url: frag.url, encoding: null });
+            const data = await get({ url: frag.url, encoding: null });
+            frag.data = Thumbcoil.tsInspector.inspect(data);
             return Promise.resolve();
         }));
         i += batchSize;
@@ -84,9 +85,6 @@ export default async function analyze(url: string) {
         console.log(`Downloading fragments for level ${i}`);
         const level = levels[i];
         await batchDownload(level.fragments);
-        level.fragments.map((frag) => {
-            frag.data = Thumbcoil.tsInspector.inspect(frag.data);
-        });
     }
 
     const formattedLevels = levels.map((level) => {
@@ -108,8 +106,7 @@ export default async function analyze(url: string) {
     return formattedLevels;
 };
 
-
-(async () => {
-    const frags = await analyze('https://playertest.longtailvideo.com/adaptive/bipbop/discontinuity.m3u8');
-    console.log(frags[0]);
-})();
+// (async () => {
+//     const frags = await analyze('https://playertest.longtailvideo.com/adaptive/bbbfull/bbbfull.m3u8');
+//     console.log(frags[0]);
+// })();
