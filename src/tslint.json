@@ -8,6 +8,7 @@
     },
     "no-bitwise": false,
     "variable-name": [true, "allow-leading-underscore"],
-    "no-console": false
+    "no-console": false,
+    "interface-name" : [true, "never-prefix"]
   }
 }

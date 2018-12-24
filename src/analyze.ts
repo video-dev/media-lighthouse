@@ -1,7 +1,12 @@
 import { get } from 'request-promise-native';
 import * as Thumbcoil from 'thumbcoil';
 import Fragment from './hls/fragment';
-import M3U8Parser from './hls/m3u8-parser';
+import Level from './hls/level';
+import M3U8Parser from './hls/m3u8-parser.js';
+
+interface Playlist {
+    levels: Level[];
+}
 
 function isLevelPlaylist(playlist: string) {
     return playlist.indexOf('#EXTINF:') > 0 || playlist.indexOf('#EXT-X-TARGETDURATION:') > 0;
@@ -22,10 +27,10 @@ const batchDownload = async (frags: Fragment[]) => {
     return Promise.resolve;
 };
 
-const filterPackets = (frag: Fragment) => {
+const filterPackets = (esMap) => {
     const audio = { pts: [], dts: [] };
     const video = { pts: [], dts: [] };
-    frag.data.esMap.forEach((packet) => {
+    esMap.forEach((packet) => {
         if (packet.type === 'audio') {
             audio.pts.push(packet.pts);
             audio.dts.push(packet.dts);
@@ -48,7 +53,7 @@ function collapseRanges(data) {
         const sign = Math.sign(data[j] - data[i]);
         do {
             j++;
-            equalSigns = Math.sign(data[j] - data[j - 1]) === sign;
+            equalSigns = !sign || Math.sign(data[j] - data[j - 1]) === sign;
         } while (j < data.length && equalSigns);
 
         if (j === data.length - 1) {
@@ -65,10 +70,32 @@ function collapseRanges(data) {
         }
     }
 
-    return result;
+    return result.flat();
 }
 
-export default async function analyze(url: string) {
+export async function analyze(frag: Fragment) {
+    const fragUrl = frag.url;
+    console.log(`analyzing frag ${fragUrl}`);
+    const tsData = await get({ url: fragUrl, encoding: null });
+    const thumbFrag = Thumbcoil.tsInspector.inspect(tsData);
+    return collapseLevelTiming(thumbFrag.esMap);
+}
+
+export function collapseLevelTiming(esMap) {
+    const { audio, video } = filterPackets(esMap);
+    return {
+        audio: {
+            dts: collapseRanges(audio.dts),
+            pts: collapseRanges(audio.pts),
+        },
+        video: {
+            dts: collapseRanges(video.dts),
+            pts: collapseRanges(video.pts),
+        },
+    };
+}
+
+export async function parsePlaylist(url: string): Promise<Level[]> {
     const masterResponse = await get(url);
     let levels;
     if (isLevelPlaylist(masterResponse)) {
@@ -81,32 +108,12 @@ export default async function analyze(url: string) {
         }));
     }
 
-    for (let i = 0; i < levels.length; i++) {
-        console.log(`Downloading fragments for level ${i}`);
-        const level = levels[i];
-        await batchDownload(level.fragments);
-    }
-
-    const formattedLevels = levels.map((level) => {
-        return level.fragments.map((frag) => {
-            const { audio, video } = filterPackets(frag);
-            return {
-                audio: {
-                    pts: collapseRanges(audio.pts),
-                    dts: collapseRanges(audio.dts),
-                },
-                video: {
-                    pts: collapseRanges(video.pts),
-                    dts: collapseRanges(video.dts),
-                },
-            };
-        });
-    });
-
-    return formattedLevels;
-};
+    return levels;
+}
 
 // (async () => {
-//     const frags = await analyze('https://playertest.longtailvideo.com/adaptive/bbbfull/bbbfull.m3u8');
-//     console.log(frags[0]);
+//     const playlist = await parsePlaylist('https://playertest.longtailvideo.com/adaptive/bbbfull/bbbfull.m3u8');
+//     console.log(playlist);
+//     const frag = await analyze(playlist[0].fragments[0].url);
+//     console.log(frag);
 // })();

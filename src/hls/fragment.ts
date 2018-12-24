@@ -4,16 +4,23 @@ import * as URLToolkit from 'url-toolkit';
 import LevelKey from './level-key';
 
 export default class Fragment {
-  public tagList: string[] = [];
+  public tagList: string[][] = [];
   public programDateTime: number;
   public rawProgramDateTime: string;
   public relurl: string;
   public baseurl: string;
   public rawByteRange: string;
   public duration: number;
-  public levelkey: string;
-  public sn: number = 0;
+  public levelkey: LevelKey;
+  public sn: number | string = 0;
   public data: any;
+  public title: string;
+  public start: number;
+  public type: string;
+  public cc: number;
+  public level: number;
+  public urlId: string;
+  public lastByteRangeEndOffset: number = 0;
 
   private _url: string;
   private _byteRange: number[];
@@ -22,7 +29,6 @@ export default class Fragment {
     key: string,
   };
   private _elementaryStreams: {};
-  private lastByteRangeEndOffset: number = 0;
 
   constructor() {
     // Holds the types of data this fragment supports

@@ -14,9 +14,10 @@ export default class Level {
     public totalduration: number = 0;
     public type: string;
     public url: string;
-    public version: string;
+    public version: number;
+    public averagetargetduration: number;
 
-  constructor(baseUrl) {
+    constructor(baseUrl) {
     this.url = baseUrl;
   }
 
