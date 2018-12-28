@@ -13,7 +13,7 @@ export default class Fragment {
   public duration: number;
   public levelkey: LevelKey;
   public sn: number | string = 0;
-  public data: any;
+  public data: any = null;
   public title: string;
   public start: number;
   public type: string;

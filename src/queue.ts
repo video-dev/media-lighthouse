@@ -64,7 +64,6 @@ export default class MediaQueue {
     }
 
     public async pushFragments(fragments: Fragment[]) {
-        const { rsmq, qname } = this;
         return new Promise((resolve, reject) => {
             for (const frag of fragments) {
                 try {

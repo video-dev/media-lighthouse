@@ -4,8 +4,9 @@ import Fragment from './hls/fragment';
 import Level from './hls/level';
 import M3U8Parser from './hls/m3u8-parser.js';
 
-interface Playlist {
+export interface Playlist {
     levels: Level[];
+    url: string;
 }
 
 function isLevelPlaylist(playlist: string) {
@@ -95,7 +96,7 @@ export function collapseLevelTiming(esMap) {
     };
 }
 
-export async function parsePlaylist(url: string): Promise<Level[]> {
+export async function parsePlaylist(url: string): Promise<Playlist> {
     const masterResponse = await get(url);
     let levels;
     if (isLevelPlaylist(masterResponse)) {
@@ -108,12 +109,8 @@ export async function parsePlaylist(url: string): Promise<Level[]> {
         }));
     }
 
-    return levels;
+    return {
+        levels,
+        url,
+    };
 }
-
-// (async () => {
-//     const playlist = await parsePlaylist('https://playertest.longtailvideo.com/adaptive/bbbfull/bbbfull.m3u8');
-//     console.log(playlist);
-//     const frag = await analyze(playlist[0].fragments[0].url);
-//     console.log(frag);
-// })();
