@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  media-lighthouse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: media-lighthouse
+    ports:
+      - '3000:3000'
+    depends_on:
+      - redis
+      - mongo
+    command: ["./wait-for-it.sh", "db:27017", "--", "npm", "start"]
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+

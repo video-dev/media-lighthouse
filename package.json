@@ -10,7 +10,8 @@
     "build": "tsc -p ./src",
     "lint": "tslint 'src/**/*.ts'",
     "watch": "tsc -w -p ./src",
-    "serve": "node --max-old-space-size=4096 ./app/index.js"
+    "serve": "node --max-old-space-size=4096 ./app/index.js",
+    "start": "npm run build && npm run serve"
   },
   "dependencies": {
     "chart.js": "^2.7.3",

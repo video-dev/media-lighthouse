@@ -19,7 +19,7 @@ export default class MediaQueue {
         this.qname = hash(playlistUrl);
     }
 
-    public async init() {
+    public init() {
         const { rsmq, qname } = this;
         console.log(`creating queue for ${qname}`);
         rsmq.createQueue({ qname }, (err, resp) => {

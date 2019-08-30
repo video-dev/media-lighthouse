@@ -9,7 +9,7 @@ export enum ProcessingStatus {
 }
 
 export default class Database {
-    private url: string = 'mongodb://localhost:27017';
+    private url: string = 'mongodb://mongo:27017';
     private dbName: string = 'media-lighthouse';
     private collectionName: string = 'streams';
     private db: Db;

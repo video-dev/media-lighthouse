@@ -6,7 +6,7 @@ import MediaQueue from './queue';
 
 const port = 3000;
 const app = express();
-const rsmq = this.rsmq = new RedisSMQ( { host: '127.0.0.1', port: 6379, ns: 'rsmq' } );
+const rsmq = this.rsmq = new RedisSMQ( { host: 'redis', port: 6379, ns: 'rsmq' } );
 const db = new Database();
 
 async function processFrags(queue, playlist) {
@@ -22,7 +22,7 @@ async function processFrags(queue, playlist) {
 
 async function processMedia(url: string) {
     const queue = new MediaQueue(rsmq, url);
-    await queue.init();
+    queue.init();
 
     const playlist = await parsePlaylist(url);
     if (await queue.hasFragmentsEnqueued()) {
@@ -61,6 +61,7 @@ async function processMedia(url: string) {
             return;
         }
         url = decodeURIComponent(url);
+        console.log(`Analyzing ${url}`);
         res.send(200);
         await processMedia(url);
         console.log('done');
